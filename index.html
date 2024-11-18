@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Pizza Chart with Names</title>
+<style>
+body {
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+.PizzaContainer {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+    border-radius: 50%; /* Makes it a circle */
+    overflow: hidden;
+    background-color: #f8f8f8;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.hold {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    clip: rect(0px, 300px, 300px, 150px);
+    transform-origin: center;
+}
+.Pizza {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    clip: rect(0px, 150px, 300px, 0px);
+    border-radius: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    transform-origin: center;
+}
+</style>
+</head>
+<body>
+
+<h2>Create a Pizza with Player Names</h2>
+<label for="names">Enter names (comma separated):</label>
+<input type="text" id="names" placeholder="e.g., Alice, Bob, Charlie" />
+<button onclick="generatePizza()">Generate Pizza</button>
+
+<div class="PizzaContainer" id="PizzaContainer">
+  
+</div>
+
+<script>
+function generatePizza() {
+    const container = document.getElementById('PizzaContainer');
+    const input = document.getElementById('names').value.trim();
+    const names = input.split(',').map(name => name.trim()).filter(name => name);
+
+    if (names.length === 0) {
+        alert('Please enter at least one name!');
+        return;
+    }
+
+    // Clear previous slices
+    container.innerHTML = '';
+
+    const sliceAngle = 360 / names.length; // Calculate angle for each slice
+
+    names.forEach((name, index) => {
+        // Create the holder div
+        const hold = document.createElement('div');
+        hold.className = 'hold';
+        hold.style.transform = `rotate(${index * sliceAngle}deg)`;
+
+        // Create the Pizza slice div
+        const slice = document.createElement('div');
+        slice.className = 'Pizza';
+        slice.style.backgroundColor = getRandomColor(); // Assign random color
+        slice.style.transform = `rotate(${sliceAngle}deg)`;
+
+        // Add name to the slice
+        const sliceText = document.createElement('span');
+        sliceText.textContent = name;
+        slice.appendChild(sliceText);
+
+        // Append slice to holder and holder to container
+        hold.appendChild(slice);
+        container.appendChild(hold);
+    });
+}
+
+// Utility function to generate random colors
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+</script>
+
+</body>
+</html>
